@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09070f">
+
+  <title>SPHINX</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css.css">
+</head>
+
+<body>
+
+  <!-- AUTHENTICATION -->
+
+  <section id="authScreen" class="auth-screen" hidden>
+    <div class="auth-card">
+
+      <img src="PICTURES/sphinx.png" alt="SPHINX" class="auth-brand-logo">
+
+      <h1 id="authHeading">Welcome back</h1>
+
+      <form id="authForm">
+
+        <label for="authUsername">Username</label>
+        <input
+          id="authUsername"
+          type="text"
+          minlength="3"
+          maxlength="30"
+          autocomplete="username"
+          required
+        >
+
+        <label for="authPassword">Password</label>
+
+        <div class="password-field">
+          <input
+            id="authPassword"
+            type="password"
+            minlength="6"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            id="togglePassword"
+            type="button"
+            aria-label="Show password"
+          >
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+
+        <p id="authError" class="form-error" role="alert"></p>
+
+        <button
+          id="authSubmit"
+          type="submit"
+          class="primary-button"
+        >
+          Log In
+        </button>
+      </form>
+
+      <button id="authSwitch" type="button">
+        Don't have an account? Sign up
+      </button>
+
+    </div>
+  </section>
+
+  <!-- APPLICATION -->
+
+  <div id="app" class="app">
+
+    <!-- TOP NAVIGATION -->
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <div class="brand">
+          <span class="sphinx-logo-frame" aria-label="SPHINX logo">
+            <img src="PICTURES/sphinx.png" alt="" class="brand-logo" onerror="this.hidden=true">
+            <i class="fa-solid fa-compact-disc sphinx-logo-fallback" aria-hidden="true"></i>
+          </span>
+          <span class="sphinx-wordmark">SPHINX</span>
+        </div>
+
+      </div>
+
+      <nav class="top-navigation" aria-label="Main navigation">
+
+        <button id="homeNav" class="top-nav-button active" type="button">
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </button>
+
+        <button id="searchNav" class="top-nav-button" type="button">
+          <i class="fa-solid fa-compass"></i>
+          <span>Discover</span>
+        </button>
+
+        <button id="libraryNav" class="top-nav-button" type="button">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Your Library</span>
+        </button>
+
+      </nav>
+
+      <div class="topbar-right">
+
+        <div class="search-container">
+
+          <label class="search-box" for="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              id="search"
+              type="search"
+              placeholder="Search songs, artists..."
+              autocomplete="off"
+            >
+          </label>
+
+          <button
+            id="mobileSearchToggle"
+            class="icon-button mobile-search-toggle"
+            type="button"
+            aria-label="Open search"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+
+        </div>
+
+        <div class="account-wrapper">
+
+          <button
+            id="accountButton"
+            class="account-button"
+            type="button"
+            aria-label="Account menu"
+            aria-expanded="false"
+          >
+            <span id="accountAvatar" class="account-avatar">
+              <i class="fa-solid fa-user"></i>
+            </span>
+
+            <span id="accountName" class="account-name">
+              Account
+            </span>
+
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+
+          <div id="accountMenu" class="account-menu" hidden>
+
+            <button id="profileNav" type="button">
+              <i class="fa-regular fa-user"></i>
+              Profile
+            </button>
+
+            <button id="logoutButton" type="button">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Log Out
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MOBILE SEARCH -->
+
+    <div id="mobileSearchPanel" class="mobile-search-panel" hidden>
+      <label for="mobileSearch">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          id="mobileSearch"
+          type="search"
+          placeholder="Search songs and artists..."
+          autocomplete="off"
+        >
+      </label>
+
+      <button
+        id="closeMobileSearch"
+        type="button"
+        aria-label="Close search"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+
+    <div class="workspace">
+
+      <!-- LEFT SIDEBAR -->
+
+      <aside id="sidebar" class="sidebar">
+
+        <div class="sidebar-heading">
+          <span class="sidebar-heading-title">
+            <button id="libraryCollapseToggle" type="button" class="icon-button library-collapse-toggle" aria-label="Collapse library" aria-expanded="true" title="Collapse library">
+              <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+            </button>
+            <span>Your Library</span>
+          </span>
+        </div>
+
+        <div class="sidebar-navigation">
+
+          <button id="allSongsView" class="sidebar-link" type="button">
+            <span class="sidebar-tile all-tile">
+              <i class="fa-solid fa-music"></i>
+            </span>
+            <span class="sidebar-link-info">
+              <strong>All Songs</strong>
+              <small id="allSongsCount">10 tracks</small>
+            </span>
+          </button>
+
+          <button id="likedView" class="sidebar-link" type="button">
+            <span class="sidebar-tile liked-tile">
+              <i class="fa-solid fa-heart"></i>
+            </span>
+            <span class="sidebar-link-info">
+              <strong>Liked Songs</strong>
+              <small id="likedCount">0 songs</small>
+            </span>
+          </button>
+
+          <button id="recentView" class="sidebar-link" type="button">
+            <span class="sidebar-tile recent-tile">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </span>
+            <span class="sidebar-link-info">
+              <strong>Recently Played</strong>
+              <small>Your listening history</small>
+            </span>
+          </button>
+
+          <button id="playlistsView" class="sidebar-link" type="button">
+            <span class="sidebar-tile playlist-tile">
+              <i class="fa-solid fa-list"></i>
+            </span>
+            <span class="sidebar-link-info">
+              <strong>Playlists</strong>
+              <small id="playlistCount">0 playlists</small>
+            </span>
+          </button>
+
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <!-- PLAYLIST PLUS ICON -->
+
+        <div class="sidebar-section-title">
+          <span>YOUR PLAYLISTS</span>
+
+          <button
+            id="sidebarAddPlaylist"
+            class="icon-button"
+            type="button"
+            aria-label="Create playlist"
+          >
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div id="playlistList" class="playlist-list"></div>
+
+        <div class="sidebar-bottom">
+          <i class="fa-solid fa-headphones"></i>
+          <span>BSIT - 1B | SPHINX</span>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT -->
+
+      <main class="main-content">
+        <div id="main" class="main-scroll">
+
+          <!-- HOME -->
+
+          <section id="hero" class="hero">
+            <div class="hero-content">
+
+              <h1 id="greeting">Welcome to SPHINX!</h1>
+
+              <p>
+                Life doesn't have a replay button, but guess what? We do! Welcome to SPHINX, fellow music enjoyer :D
+              </p>
+
+              <div class="hero-actions">
+                <button id="featured" class="primary-button" type="button" aria-pressed="false">
+                  <i class="fa-solid fa-play"></i>
+                  Start Listening
+                </button>
+
+                <button id="heroLibrary" class="secondary-button" type="button">
+                  Explore Library
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="hero-decoration" aria-hidden="true">
+              <div id="heroVinyl" class="vinyl-record">
+                <div class="vinyl-label"><img src="PICTURES/sphinx.png" alt="" class="vinyl-brand-logo" onerror="this.hidden=true"><i class="fa-solid fa-music vinyl-logo-fallback" aria-hidden="true"></i></div>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- RECENTLY PLAYED -->
+
+          <section id="recentSection" class="content-section" hidden>
+
+            <div class="section-heading">
+              <div>
+                <span class="section-eyebrow">YOUR LISTENING HISTORY</span>
+                <h2>Recently Played</h2>
+              </div>
+
+              <button id="clearRecent" class="text-button" type="button">
+                Clear History
+              </button>
+            </div>
+
+            <div id="recentGrid" class="song-grid"></div>
+          </section>
+
+          <!-- SONGS AND PLAYLISTS -->
+
+          <section id="songsSection" class="content-section">
+
+            <div class="section-heading">
+              <div>
+                <span id="viewEyebrow" class="section-eyebrow">
+                  YOUR MUSIC COLLECTION
+                </span>
+
+                <h2 id="viewTitle">Your Top 10 Songs </h2>
+
+              </div>
+
+              <div class="section-actions">
+
+                <button
+                  id="editPlaylistButton"
+                  class="secondary-button small-button"
+                  type="button"
+                  hidden
+                >
+                  <i class="fa-solid fa-pen"></i>
+                  Edit
+                </button>
+
+                <button
+                  id="addPlaylistSong"
+                  class="secondary-button small-button"
+                  type="button"
+                  hidden
+                >
+                  <i class="fa-solid fa-plus"></i>
+                  Add Songs
+                </button>
+
+              </div>
+            </div>
+
+            <div
+              id="playlistOverview"
+              class="playlist-overview"
+              hidden
+            ></div>
+
+            <div id="songGrid" class="song-grid"></div>
+
+            <div id="empty" class="empty-state" hidden>
+              <i class="fa-solid fa-music"></i>
+              <h3>Nothing here yet</h3>
+              <p>Your music will appear here.</p>
+            </div>
+
+          </section>
+
+          <!-- PROFILE -->
+
+          <section id="profilePage" class="profile-page" hidden>
+
+            <div class="profile-banner">
+
+              <div id="profileAvatar" class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <div class="profile-heading">
+
+                <span class="eyebrow">YOUR PROFILE</span>
+
+                <h1 id="profileName">Listener</h1>
+                <p id="profileBio">Music is my escape.</p>
+
+                <button id="editProfile" class="secondary-button" type="button">
+                  <i class="fa-solid fa-pen"></i>
+                  Edit Profile
+                </button>
+
+              </div>
+            </div>
+
+            <div class="profile-stats">
+
+              <div class="stat-card">
+                <i class="fa-solid fa-headphones"></i>
+                <strong id="totalPlays">0</strong>
+                <small>Plays This Month</small>
+              </div>
+
+              <div class="stat-card">
+                <i class="fa-solid fa-heart"></i>
+                <strong id="totalLiked">0</strong>
+                <small>Liked Songs</small>
+              </div>
+
+              <div class="stat-card">
+                <i class="fa-solid fa-list"></i>
+                <strong id="totalPlaylists">0</strong>
+                <small>Playlists</small>
+              </div>
+
+            </div>
+
+            <div class="profile-lists">
+
+              <section class="profile-list-card">
+                <h2>Top Tracks This Month</h2>
+                <div id="topTracks"></div>
+              </section>
+
+              <section class="profile-list-card">
+                <h2>Top Artists This Month</h2>
+                <div id="topArtists"></div>
+              </section>
+
+            </div>
+
+          </section>
+
+        </div>
+      </main>
+
+      <!-- NOW PLAYING -->
+
+      <aside id="rightPanel" class="right-panel">
+
+        <div class="right-panel-header">
+          <div>
+            <span class="panel-eyebrow">YOUR CURRENT SOUND</span>
+            <h2>Now Playing</h2>
+          </div>
+
+          <button
+            id="closeRight"
+            class="icon-button"
+            type="button"
+            aria-label="Close now playing"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="right-scroll">
+
+          <div class="now-playing-visual">
+
+            <img
+              id="visualFallback"
+              src="PICTURES/1975.jpg"
+              alt="Current song artwork"
+            >
+
+            <div class="visual-shade"></div>
+
+            <span class="visual-label">
+              <i class="fa-solid fa-wave-square"></i>
+              NOW PLAYING
+            </span>
+          </div>
+
+          <div class="right-song-info">
+
+            <div class="right-song-text">
+              <h2 id="rightTitle">All I Need to Hear</h2>
+              <p id="rightArtist">The 1975</p>
+            </div>
+
+            <button
+              id="npHeart"
+              class="icon-button heart-button"
+              type="button"
+              aria-label="Like current song"
+            >
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+
+          <div class="np-mobile">
+            <input
+              id="npSeek"
+              type="range"
+              min="0"
+              max="1000"
+              value="0"
+              aria-label="Seek within track"
+            >
+
+            <div class="np-mobile-controls">
+              <button id="npPrev" type="button" aria-label="Previous">
+                <i class="fa-solid fa-backward-step"></i>
+              </button>
+
+              <button id="npPlay" type="button" aria-label="Play or pause">
+                <i class="fa-solid fa-play"></i>
+              </button>
+
+              <button id="npNext" type="button" aria-label="Next">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
+            </div>
+          </div>
+
+          <section class="lyrics-card">
+
+            <div class="card-heading">
+              <h3>Lyrics</h3>
+
+              <button
+                id="expandLyrics"
+                class="icon-button"
+                type="button"
+                aria-label="Expand lyrics"
+              >
+                <i class="fa-solid fa-expand"></i>
+              </button>
+            </div>
+
+            <div id="previewLines" class="lyrics-content"></div>
+            <small id="lyricsStatus">Synchronized lyrics</small>
+
+          </section>
+
+          <section class="artist-info-card">
+            <h3>About the Artist</h3>
+
+            <div id="artistInfo" class="artist-info"></div>
+          </section>
+
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- =========================================
+       BOTTOM MUSIC PLAYER
+  ========================================== -->
+
+  <footer id="player" class="player">
+
+    <div class="player-song">
+
+      <img
+        id="cover"
+        src="PICTURES/1975.jpg"
+        alt="Album artwork"
+      >
+
+      <div class="player-song-info">
+        <strong id="title">All I Need to Hear</strong>
+        <small id="artist">The 1975</small>
+      </div>
+
+    </div>
+
+    <div class="player-center">
+
+      <div class="player-controls">
+
+        <button id="shuffle" type="button" aria-label="Shuffle">
+          <i class="fa-solid fa-shuffle"></i>
+        </button>
+
+        <button id="prev" type="button" aria-label="Previous">
+          <i class="fa-solid fa-backward-step"></i>
+        </button>
+
+        <button id="play" class="main-play-button" type="button" aria-label="Play or pause">
+          <i class="fa-solid fa-play"></i>
+        </button>
+
+        <button id="next" type="button" aria-label="Next">
+          <i class="fa-solid fa-forward-step"></i>
+        </button>
+
+        <button id="repeat" type="button" aria-label="Repeat">
+          <i class="fa-solid fa-repeat"></i>
+        </button>
+
+      </div>
+
+      <div class="player-progress">
+
+        <span id="currentTime">0:00</span>
+
+        <input
+          id="seek"
+          type="range"
+          min="0"
+          max="1000"
+          value="0"
+          aria-label="Song progress"
+        >
+
+        <span id="duration">-0:00</span>
+
+      </div>
+
+    </div>
+
+    <button id="mobileMoreControls" class="mobile-more-controls" type="button" aria-label="More player controls" aria-expanded="false" aria-controls="mobileControlsPanel"><i class="fa-solid fa-ellipsis"></i></button>
+    <div id="mobileControlsPanel" class="mobile-controls-panel" hidden>
+      <div class="mobile-controls-heading">MORE CONTROLS</div>
+      <button id="mobileLyricsButton" type="button" class="mobile-lyrics-button"><i class="fa-solid fa-align-left"></i><span>Lyrics</span></button>
+      <div id="mobileMovedControls" class="mobile-moved-controls"></div>
+    </div>
+    <div class="player-extra">
+
+      <button id="queueButton" type="button" aria-label="Queue">
+        <i class="fa-solid fa-list"></i>
+      </button>
+
+      <button id="toggleRight" type="button" aria-label="Now playing">
+        <i class="fa-solid fa-window-maximize"></i>
+      </button>
+
+      <button id="mute" type="button" aria-label="Mute">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+
+      <input
+        id="volume"
+        type="range"
+        min="0"
+        max="100"
+        value="70"
+        aria-label="Volume"
+      >
+
+    </div>
+
+  </footer>
+
+  <!-- =========================================
+       ARTIST PROFILE MODAL
+  ========================================== -->
+
+  <div id="artistModal" class="modal-overlay" hidden>
+
+    <div
+      class="modal artist-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="artistModalName"
+    >
+
+      <button
+        id="closeArtistModal"
+        class="modal-close"
+        type="button"
+        aria-label="Close artist profile"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="artist-modal-scroll">
+
+        <div class="artist-modal-hero">
+
+          <img
+            id="artistModalPhoto"
+            src=""
+            alt="Artist portrait"
+          >
+
+          <div class="artist-modal-heading">
+            <span class="eyebrow">ARTIST PROFILE</span>
+            <h2 id="artistModalName"></h2>
+            <p id="artistModalGenre"></p>
+          </div>
+
+        </div>
+
+        <section class="artist-modal-section artist-about-inline">
+          <p id="artistModalBio"></p>
+          <div id="artistModalFacts" class="artist-facts"></div>
+        </section>
+
+        <section class="artist-modal-section">
+          <span class="section-eyebrow">LISTEN</span><h3>Popular Songs</h3>
+          <div id="artistModalPopular" class="artist-song-list"></div>
+        </section>
+
+        <section class="artist-modal-section">
+          <span class="section-eyebrow">EXPLORE THE MUSIC</span><h3>Albums &amp; Discography</h3>
+          <div id="artistModalAlbums" class="album-grid"></div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       PLAYLIST MODAL
+  ========================================== -->
+
+  <div id="playlistModal" class="modal-overlay" hidden>
+
+    <div class="modal" role="dialog" aria-modal="true">
+
+      <div class="modal-heading">
+        <h2 id="playlistModalTitle">Create Playlist</h2>
+
+        <button
+          id="closePlaylistModal"
+          class="icon-button"
+          type="button"
+          aria-label="Close playlist editor"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="playlistForm">
+
+        <label for="playlistNameInput">Playlist Name</label>
+        <input
+          id="playlistNameInput"
+          type="text"
+          maxlength="60"
+          required
+        >
+
+        <label for="playlistDescriptionInput">Description</label>
+        <textarea
+          id="playlistDescriptionInput"
+          rows="3"
+          maxlength="300"
+        ></textarea>
+
+        <label for="playlistCoverInput">Playlist Cover</label>
+        <input
+          id="playlistCoverInput"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        >
+
+        <div id="playlistCoverPreview" class="cover-preview">
+          <i class="fa-solid fa-music"></i>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            id="cancelPlaylist"
+            class="secondary-button"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button class="primary-button" type="submit">
+            Save Playlist
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =========================================
+       ADD SONGS TO PLAYLIST
+  ========================================== -->
+
+  <div id="addSongsModal" class="modal-overlay" hidden>
+
+    <div class="modal" role="dialog" aria-modal="true">
+
+      <div class="modal-heading">
+        <h2>Add Songs</h2>
+
+        <button
+          id="closeAddSongs"
+          class="icon-button"
+          type="button"
+          aria-label="Close add songs"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="addSongsList" class="modal-song-list"></div>
+
+    </div>
+  </div>
+
+  <!-- =========================================
+       PROFILE EDITOR
+  ========================================== -->
+
+  <div id="editProfileModal" class="modal-overlay" hidden>
+
+    <div class="modal" role="dialog" aria-modal="true">
+
+      <div class="modal-heading">
+        <h2>Edit Profile</h2>
+
+        <button
+          id="closeEditProfile"
+          class="icon-button"
+          type="button"
+          aria-label="Close profile editor"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="editProfileForm">
+
+        <label for="editDisplayName">Display Name</label>
+        <input
+          id="editDisplayName"
+          type="text"
+          maxlength="40"
+          required
+        >
+
+        <label for="editBio">Bio</label>
+        <textarea
+          id="editBio"
+          maxlength="200"
+          rows="3"
+        ></textarea>
+
+        <label for="editPhoto">Profile Photo</label>
+        <input
+          id="editPhoto"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        >
+
+        <div id="editAvatarPreview" class="edit-avatar-preview"></div>
+
+        <div class="modal-actions">
+          <button
+            id="cancelProfile"
+            class="secondary-button"
+            type="button"
+          >
+            Cancel
+          </button>
+
+          <button class="primary-button" type="submit">
+            Save Changes
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- =========================================
+       QUEUE
+  ========================================== -->
+
+  <div id="queueBackdrop" class="queue-backdrop" hidden></div>
+  <div id="queuePanel" class="queue-panel" role="dialog" aria-label="Your Queue" hidden>
+    <div class="queue-heading"><div><span class="section-eyebrow">UP NEXT</span><h2>Your Queue</h2><p id="queueCount">0 songs</p></div>
+      <button id="closeQueue" class="icon-button" type="button" aria-label="Close queue"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="queue-tools"><span class="section-eyebrow">PLAY NEXT</span><button id="clearQueue" class="text-button" type="button"><i class="fa-solid fa-trash"></i> Clear Queue</button></div>
+    <div id="queueList" class="queue-list"></div>
+  </div>
+
+  <!-- =========================================
+       LYRICS OVERLAY
+  ========================================== -->
+
+  <div id="lyricsModal" class="modal-overlay" hidden>
+    <div class="modal lyrics-modal" role="dialog" aria-modal="true" aria-label="Full screen lyrics">
+      <header class="full-lyrics-header"><img src="PICTURES/sphinx-logo.png" alt="SPHINX" class="lyrics-brand"><div><span class="section-eyebrow">NOW SINGING</span><h2 id="fullTitle"></h2><p id="fullArtist"></p></div><button id="closeLyricsModal" class="icon-button" type="button" aria-label="Close lyrics"><i class="fa-solid fa-xmark"></i></button></header>
+      <div class="lyrics-layout"><div class="lyrics-video-wrap"><video id="artistVideo" muted playsinline autoplay preload="metadata" loop disablePictureInPicture controlsList="noremoteplayback" aria-label="Looping music video visual" hidden></video><img id="lyricsVideoFallback" src="PICTURES/1975.jpg" alt="Song cover"></div><div id="fullLyrics" class="expanded-lyrics"></div></div>
+      <p class="lyrics-footer">♪ Feel every word.</p>
+    </div>
+  </div>
+
+  <div id="songMenu" class="song-menu" hidden></div>
+  <div id="confirmModal" class="modal-overlay" hidden><div class="modal" role="dialog" aria-modal="true"><h2 id="confirmTitle"></h2><p id="confirmMessage"></p><div class="modal-actions"><button id="confirmCancel" class="secondary-button" type="button">Cancel</button><button id="confirmAccept" class="primary-button" type="button">Confirm</button></div></div></div>
+
+  <!-- NOTIFICATIONS AND AUDIO -->
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <audio id="audioPlayer" preload="metadata"></audio>
+  <script src="Js.js"></script>
+
+</body>
+</html>
